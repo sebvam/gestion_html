@@ -1,5 +1,4 @@
-
-import os, sys, configparser, webview, xml.etree.ElementTree as ET
+import os, sys, configparser, webview
 import shutil
 from tkinter import filedialog, Tk
 
@@ -14,8 +13,16 @@ def ensure_config():
         os.makedirs(CONFIG_DIR, exist_ok=True)
     if not os.path.exists(INI_PATH):
         cfg = configparser.ConfigParser()
-        cfg['window'] = {'title': 'Sistema de Gestión', 'width': '1024', 'height': '768', 'start_page': 'templates/index.html'}
-        cfg['preferences'] = {'theme': 'light', 'font_size': 'normal'}
+        cfg['window'] = {
+            'title': 'Sistema de Gestión',
+            'width': '1024',
+            'height': '768',
+            'start_page': 'templates/index.html'
+        }
+        cfg['preferences'] = {
+            'theme': 'light',
+            'font_size': 'normal'
+        }
         with open(INI_PATH, 'w', encoding='utf-8') as f:
             cfg.write(f)
 
@@ -38,11 +45,16 @@ def write_prefs(theme, font_size):
         cfg.write(f)
 
 class Api:
+
     def upload_file(self):
         root = Tk(); root.withdraw()
-        path = filedialog.askopenfilename(title="Seleccionar archivo HTML", filetypes=[("HTML files", "*.html")])
+        path = filedialog.askopenfilename(
+            title="Seleccionar archivo HTML",
+            filetypes=[("HTML files", "*.html")]
+        )
         if not path:
-            root.destroy(); return "cancelled"
+            root.destroy()
+            return "cancelled"
         dest = os.path.join(TEMPLATES_DIR, os.path.basename(path))
         try:
             shutil.copy2(path, dest)
@@ -64,23 +76,25 @@ class Api:
 
     def list_files(self):
         try:
-            files = [f for f in os.listdir(TEMPLATES_DIR) if f.endswith('.html') and f != 'index.html']
-            files.sort(key=lambda s: s.lower())
-            return files
-        except Exception as e:
+            files = [
+                f for f in os.listdir(TEMPLATES_DIR)
+                if f.endswith('.html') and f != 'index.html'
+            ]
+        except:
             return []
+        files.sort(key=lambda s: s.lower())
+        return files
 
     def abrir_archivo(self, nombre):
         path = os.path.join(TEMPLATES_DIR, nombre)
         if os.path.exists(path):
-            window = webview.windows[0]
-            window.load_url('file:///' + os.path.abspath(path).replace('\\\\','/'))
-            return "ok"
-        return "noexist"
+            # ruta para el iframe
+            return 'file:///' + os.path.abspath(path).replace('\\', '/')
+        return None
 
     def refresh(self):
         window = webview.windows[0]
-        window.load_url('file:///' + os.path.abspath(INDEX_HTML).replace('\\\\','/'))
+        window.load_url('file:///' + os.path.abspath(INDEX_HTML).replace('\\', '/'))
         return "ok"
 
     def get_prefs(self):
@@ -90,25 +104,21 @@ class Api:
         write_prefs(theme, font_size)
         return "ok"
 
-    # convenience for HTML: guardar tema (kept for compatibility)
-    def guardar_tema(self, tema):
-        prefs = read_prefs()
-        write_prefs(tema, prefs.get('font_size', 'normal'))
-        return "ok"
-
 def main():
     ensure_config()
     cfg = configparser.ConfigParser()
     cfg.read(INI_PATH, encoding='utf-8')
+
     title = cfg.get('window','title', fallback='Sistema de Gestión')
     width = cfg.getint('window','width', fallback=1024)
     height = cfg.getint('window','height', fallback=768)
     start_page = cfg.get('window','start_page', fallback=INDEX_HTML)
+
     if not os.path.isabs(start_page):
         start_page = os.path.join(BASE_DIR, start_page)
 
     api = Api()
-    start_url = 'file:///' + os.path.abspath(start_page).replace('\\\\','/')
+    start_url = 'file:///' + os.path.abspath(start_page).replace('\\','/')
     window = webview.create_window(title, start_url, width=width, height=height, js_api=api)
     webview.start()
 
