@@ -1,49 +1,185 @@
-
 <!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <title>Sistema de Gestión</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <style>
   :root{
-    --bg:#f5f6f7; --card:#ffffff; --text:#222; --muted:#666; --accent:#2b7cff;
+    --bg:#f5f6f7;
+    --card:#ffffff;
+    --text:#222;
+    --muted:#666;
+    --accent:#2b7cff;
+    --light-border:#e6e6e6;
   }
-  body{font-family:Segoe UI, Roboto, Arial, sans-serif; margin:0; background:var(--bg); color:var(--text);}
-  header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:transparent;border-bottom:1px solid #e6e6e6;}
-  .title{font-weight:600;}
-  .main{display:flex;min-height:calc(100vh - 56px);}
-  .content{flex:1;padding:20px;max-width:900px;margin:0 auto;}
-  .card{background:var(--card);border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06);padding:18px;}
-  .controls{display:flex;gap:10px;margin-bottom:16px;}
-  button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;}
-  button.secondary{background:#e0e0e0;color:#222;}
-  ul.file-list{list-style:none;padding:0;margin:0;}
-  ul.file-list li{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;margin-bottom:8px;background:#f3f4f6;}
-  a.file-link{color:var(--text);text-decoration:none;cursor:pointer;}
-  .sidebar{width:0;transition:width .25s;overflow:hidden;border-left:1px solid #e6e6e6;background:#fafafa;}
-  .sidebar.open{width:300px;padding:18px;}
-  .field{margin-bottom:12px;}
-  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
-  select{width:100%;padding:8px;border-radius:6px;border:1px solid #ddd;}
-  #backButton{display:none;margin-left:8px;background:#555;}
+
+  body{
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+  }
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 22px;
+    background:#fff;
+    border-bottom:1px solid var(--light-border);
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .title{
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:0.3px;
+  }
+
+  /* LAYOUT DIVIDIDO */
+  .main{
+    display:flex;
+    height:calc(100vh - 60px);
+  }
+
+  /* PANEL IZQUIERDO */
+  .left-panel{
+    width:36%;
+    max-width:420px;
+    padding:22px;
+    border-right:1px solid var(--light-border);
+    background:#fafafa;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+
+  /* TARJETA */
+  .card{
+    background:var(--card);
+    border-radius:12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+    padding:18px 20px;
+  }
+
+  .controls{
+    display:flex;
+    gap:12px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+
+  button{
+    background:var(--accent);
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    color:#fff;
+    cursor:pointer;
+    transition:0.15s ease;
+    font-size:14px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.12);
+  }
+
+  button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 5px 12px rgba(0,0,0,0.15);
+    opacity:0.95;
+  }
+
+  button.secondary{
+    background:#e6e6e6;
+    color:#222;
+  }
+
+  ul.file-list{
+    list-style:none;
+    padding:0;
+    margin:0;
+  }
+
+  ul.file-list li{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 14px;
+    border-radius:10px;
+    margin-bottom:10px;
+    background:#f5f6f7;
+    border:1px solid #e1e1e1;
+    transition:0.15s;
+  }
+
+  ul.file-list li:hover{
+    background:#eef3ff;
+    border-color:#d2ddff;
+  }
+
+  a.file-link{
+    color:var(--text);
+    text-decoration:none;
+    font-weight:500;
+    cursor:pointer;
+  }
+
+  /* PANEL DERECHO */
+  .viewer-container{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+  }
+
+  .viewer-header{
+    padding:12px;
+    border-bottom:1px solid var(--light-border);
+    background:#fdfdfd;
+    display:flex;
+    justify-content:flex-end;
+  }
+
+  iframe{
+    flex:1;
+    width:100%;
+    border:none;
+    background:#ffffff;
+  }
 </style>
 </head>
+
 <body>
 <header>
   <div class="title">Sistema de Gestión</div>
-
 </header>
+
 <div class="main">
-  <div class="content">
+
+  <!-- PANEL IZQUIERDO -->
+  <div class="left-panel">
+
     <div class="card">
       <div class="controls">
-        <button id="uploadBtn">Subir HTML</button>
-        <button id="refreshBtn" class="secondary">Actualizar lista</button>
-        <button id="backButton" onclick="volverMenu()">Volver al menú</button>
+        <button id="uploadBtn">Subir archivo</button>
+        <button id="refreshBtn" class="secondary">Actualizar</button>
       </div>
+
       <ul id="fileList" class="file-list"></ul>
     </div>
+
+  </div>
+
+  <!-- PANEL DERECHO -->
+  <div class="viewer-container">
+
+    <div class="viewer-header">
+      <button id="closeViewerBtn" class="secondary">Cerrar vista</button>
+    </div>
+
+    <iframe id="viewer"></iframe>
+
+  </div>
 
 </div>
 
@@ -62,19 +198,33 @@ async function loadFiles(){
   const files = await apiCall('list_files') || [];
   const list = document.getElementById('fileList');
   list.innerHTML = '';
+  
   files.forEach(f => {
     const li = document.createElement('li');
+
     const a = document.createElement('a');
     a.textContent = f;
     a.className = 'file-link';
-    a.onclick = async () => { await apiCall('abrir_archivo', f); document.getElementById('backButton').style.display = 'inline-block'; };
+
+    a.onclick = async () => {
+      const ruta = await apiCall('abrir_archivo', f);
+      if (ruta){
+        document.getElementById('viewer').src = ruta;
+      }
+    };
+
     li.appendChild(a);
 
     const actions = document.createElement('div');
     const del = document.createElement('button');
     del.textContent = 'Eliminar';
-    del.onclick = async () => { await apiCall('delete_file', f); await loadFiles(); };
+    del.onclick = async () => {
+      await apiCall('delete_file', f);
+      await loadFiles();
+      document.getElementById('viewer').src = "";
+    };
     actions.appendChild(del);
+
     li.appendChild(actions);
     list.appendChild(li);
   });
@@ -85,64 +235,17 @@ document.getElementById('uploadBtn').onclick = async () => {
   await loadFiles();
 };
 
-document.getElementById('refreshBtn').onclick = async () => { await loadFiles(); };
+document.getElementById('refreshBtn').onclick = loadFiles;
 
-
-
-const sidebar = document.getElementById('sidebar');
-document.getElementById('optionsBtn').onclick = () => {
-  sidebar.classList.toggle('open');
-  sidebar.setAttribute('aria-hidden', !sidebar.classList.contains('open'));
+document.getElementById('closeViewerBtn').onclick = () => {
+  document.getElementById('viewer').src = "";
 };
 
-async function applyPrefs(prefs){
-  const theme = prefs.theme || 'light';
-  const font = prefs.font_size || 'normal';
-  document.getElementById('themeSelect').value = theme;
-  document.getElementById('fontSelect').value = font;
-
-  function setTheme(t){
-    if(t === 'auto'){
-      const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.style.setProperty('--bg', dark ? '#141414' : '#f5f6f7');
-      document.documentElement.style.setProperty('--card', dark ? '#1d1d1d' : '#ffffff');
-      document.documentElement.style.setProperty('--text', dark ? '#f1f1f1' : '#222');
-      document.documentElement.style.setProperty('--muted', dark ? '#bdbdbd' : '#666');
-      document.documentElement.style.setProperty('--accent', dark ? '#3b82f6' : '#2b7cff');
-    } else if(t === 'dark'){
-      document.documentElement.style.setProperty('--bg', '#141414');
-      document.documentElement.style.setProperty('--card', '#1d1d1d');
-      document.documentElement.style.setProperty('--text', '#f1f1f1');
-      document.documentElement.style.setProperty('--muted', '#bdbdbd');
-      document.documentElement.style.setProperty('--accent', '#3b82f6');
-    } else {
-      document.documentElement.style.setProperty('--bg', '#f5f6f7');
-      document.documentElement.style.setProperty('--card', '#ffffff');
-      document.documentElement.style.setProperty('--text', '#222');
-      document.documentElement.style.setProperty('--muted', '#666');
-      document.documentElement.style.setProperty('--accent', '#2b7cff');
-    }
-  }
-  setTheme(theme);
-
-  if(font === 'small') document.body.style.fontSize = '13px';
-  else if(font === 'large') document.body.style.fontSize = '17px';
-  else document.body.style.fontSize = '';
-}
-
-document.getElementById('savePrefs').onclick = async () => {
-  const theme = document.getElementById('themeSelect').value;
-  const font = document.getElementById('fontSelect').value;
-  await apiCall('set_prefs', theme, font);
-  await applyPrefs({theme:theme, font_size:font});
-  sidebar.classList.remove('open');
-};
-
+// INICIO
 (async ()=>{
-  const prefs = await apiCall('get_prefs') || {theme:'light',font_size:'normal'};
-  await applyPrefs(prefs);
   await loadFiles();
 })();
 </script>
+
 </body>
 </html>
