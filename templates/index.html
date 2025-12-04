@@ -14,6 +14,15 @@
     --light-border:#e6e6e6;
   }
 
+  /* Dark theme variables (aplicado con [data-theme="dark"]) */
+  :root[data-theme="dark"]{
+    --bg:#111318;
+    --text:#e6eef8;
+    --muted:#9aa6b2;
+    --accent:#4a90ff;
+    --light-border:#23272b;
+  }
+
   body{
     font-family: "Segoe UI", Roboto, Arial, sans-serif;
     margin:0;
@@ -22,29 +31,31 @@
   }
 
   header{
-    align-items: center;
     display:flex;
-    justify-content:space-between;
     align-items:center;
-    height: 40px;
+    justify-content:space-between;
+    height:48px;
     background:#fff;
     border-bottom:1px solid var(--light-border);
     box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    padding:6px 12px;
+  }
+
+  /* When dark theme, tweak header bg */
+  :root[data-theme="dark"] header{
+    background:#0f1417;
   }
 
   .title{
     font-weight:600;
-    font-size:20px;
-    letter-spacing:0.3px;
+    font-size:18px;
   }
 
-  /* LAYOUT DIVIDIDO */
   .main{
     display:flex;
-    height:calc(100vh - 60px);
+    height:calc(100vh - 48px);
   }
 
-  /* PANEL IZQUIERDO */
   .left-panel{
     width:36%;
     max-width:420px;
@@ -56,189 +67,295 @@
     gap:20px;
   }
 
-
-
-  .controls{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
+  :root[data-theme="dark"] .left-panel{
+    background:#0b0f11;
   }
 
-  button{
+  .btn-group { position: relative; display: inline-block; margin-right:8px; }
+  .btn {
     background:var(--accent);
     border:none;
-    padding:10px 16px;
+    padding:8px 14px;
     border-radius:8px;
     color:#fff;
     cursor:pointer;
-    transition:0.15s ease;
+    transition:0.12s ease;
     font-size:14px;
     box-shadow:0 3px 8px rgba(0,0,0,0.12);
   }
 
-  button:hover{
-    transform:translateY(-1px);
-    box-shadow:0 5px 12px rgba(0,0,0,0.15);
-    opacity:0.95;
+  .btn:hover{ transform: translateY(-1px); }
+
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #fff;
+    border: 1px solid var(--light-border);
+    border-radius:8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    min-width:220px;
+    z-index:40;
+    padding:8px;
+    display:none;
   }
 
-  button.secondary{
-    background:#e6e6e6;
-    color:#222;
+  :root[data-theme="dark"] .dropdown{
+    background:#0c1114;
+    color:var(--text);
   }
 
-  ul.file-list{
-    list-style:none;
-    padding:0;
-    margin:0;
+  .dropdown.show { display:block; }
+
+  .dropdown button, .dropdown input[type="range"], .dropdown select {
+    display:block;
+    width:100%;
+    text-align:left;
+    padding:8px 10px;
+    margin:6px 0;
+    background:transparent;
+    color:var(--text);
+    border-radius:6px;
+    border:1px solid #ddd;
+    cursor:pointer;
+    box-sizing:border-box;
   }
 
+  .dropdown button:hover { background:#f1f6ff; color:var(--accent); }
+  :root[data-theme="dark"] .dropdown button:hover { background: rgba(255,255,255,0.02); }
+
+  ul.file-list{ list-style:none; padding:0; margin:0; }
   ul.file-list li{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
     padding:12px 14px;
     border-radius:10px;
     margin-bottom:10px;
     background:#f5f6f7;
     border:1px solid #e1e1e1;
     transition:0.15s;
-  }
-
-  ul.file-list li:hover{
-    background:#eef3ff;
-    border-color:#d2ddff;
-  }
-
-  a.file-link{
-    color:var(--text);
-    text-decoration:none;
-    font-weight:500;
     cursor:pointer;
   }
 
-  /* PANEL DERECHO */
-  .viewer-container{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    background:#fff;
+  :root[data-theme="dark"] ul.file-list li{
+    background:#071017;
+    border:1px solid #162027;
   }
 
+  ul.file-list li:hover{ background:#eef3ff; border-color:#d2ddff; }
+  :root[data-theme="dark"] ul.file-list li:hover{ background: rgba(74,144,255,0.06); }
 
+  .viewer-container{ flex:1; display:flex; flex-direction:column; background:#fff; }
+  :root[data-theme="dark"] .viewer-container{ background:#071017; }
 
-  iframe{
-    flex:1;
-    width:100%;
-    border:none;
-    background:#ffffff;
+  iframe{ flex:1; width:100%; border:none; background:#ffffff; }
+
+  /* Config X button */
+  #closeViewerBtn{ background:transparent; border:none; font-size:22px; cursor:pointer; padding:4px 10px; margin-left:8px; }
+  /* gear button */
+  #configBtn{ background:transparent; border:none; font-size:18px; cursor:pointer; padding:6px 8px; color:var(--muted); }
+
+  @media (max-width:700px){
+    .left-panel{ width:100%; max-width:none; height:260px; overflow:auto; }
+    .main{ flex-direction:column; height:calc(100vh - 48px); }
   }
 
-  .botones{
-    margin: 0px 0px 20px 20px;
-    height: 12px;
-  }
-
+  /* small controls layout inside config dropdown */
+  .zoom-controls{ display:flex; gap:8px; align-items:center; }
+  .zoom-controls button{ padding:6px 8px; border-radius:6px; border:1px solid #ddd; background:transparent; cursor:pointer; }
+  .zoom-controls span{ min-width:42px; text-align:center; display:inline-block; }
 </style>
 </head>
 
 <body>
+
 <header>
-  <div class="controls">
-    <div class="botones">
-    <button class="upload"id="uploadBtn">Subir archivo</button>
-    <button id="refreshBtn" class="secondary">Actualizar</button>
-    <button id="closeViewerBtn" class="secondary">Cerrar vista</button>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="title">Sistema de Gestión</div>
+
+    <!-- Archivos -->
+    <div class="btn-group" id="filesGroup">
+      <button id="filesBtn" class="btn" aria-haspopup="true" aria-expanded="false">Archivos ▾</button>
+      <div class="dropdown" id="filesDropdown" role="menu">
+        <button id="uploadBtn">Subir archivo</button>
+        <button id="refreshBtn">Actualizar lista</button>
+        <button id="showDeleteBtn">Eliminar archivo</button>
+
+        <div id="deleteInline" class="delete-inline" style="display:none; margin-top:8px;">
+          <select id="deleteSelect" size="6" style="width:100%; padding:6px;"></select>
+          <div style="display:flex; gap:8px; margin-top:6px;">
+            <button id="deleteConfirm" class="del-btn">Eliminar</button>
+            <button id="deleteCancel" style="background:#eee;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">Cancelar</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- RIGHT: Config + Close (X) -->
+  <div style="display:flex; align-items:center; gap:8px;">
+    <div class="btn-group" id="configGroup">
+      <button id="configBtn" title="Configuración">⚙</button>
+      <div class="dropdown" id="configDropdown" role="menu" style="min-width:240px;">
+        <label style="font-weight:600; margin-bottom:4px;">Tema</label>
+        <select id="themeSelect" style="width:100%; padding:8px;">
+          <option value="light">Claro</option>
+          <option value="dark">Oscuro</option>
+        </select>
+
+        <label style="font-weight:600; margin-top:6px;">Zoom</label>
+        <div class="zoom-controls" style="margin-top:6px;">
+          <button id="zoomOutBtn">−</button>
+          <span id="zoomValue">100%</span>
+          <button id="zoomInBtn">+</button>
+          <button id="zoomResetBtn" style="margin-left:8px;padding:6px 8px;border-radius:6px;">100%</button>
+        </div>
+
+        <div style="margin-top:8px; font-size:12px; color:var(--muted);">
+          Ajustes guardados en configuración.
+        </div>
+      </div>
+    </div>
+
+    <button id="closeViewerBtn" title="Cerrar vista">✕</button>
+  </div>
 </header>
 
 <div class="main">
 
-  <!-- PANEL IZQUIERDO -->
   <div class="left-panel">
-
-    <div class="card">
-      <ul id="fileList" class="file-list"></ul>
-    </div>
-
+    <ul id="fileList" class="file-list"></ul>
   </div>
 
-  <!-- PANEL DERECHO -->
   <div class="viewer-container">
-
-
-
     <iframe id="viewer"></iframe>
-
   </div>
 
 </div>
 
 <script>
+/* API wrapper */
 async function apiCall(name, ...args){
   try{
-    const fn = window.pywebview.api[name];
-    return await fn(...args);
-  }catch(e){
-    console.error(e);
+    return await window.pywebview.api[name](...args);
+  }catch(err){
+    console.error(err);
     return null;
   }
 }
 
-async function loadFiles(){
-  const files = await apiCall('list_files') || [];
-  const list = document.getElementById('fileList');
-  list.innerHTML = '';
-  
-  files.forEach(f => {
-    const li = document.createElement('li');
+let currentShown = "";
+let currentZoom = 1.0;
 
-    const a = document.createElement('a');
-    a.textContent = f;
-    a.className = 'file-link';
-
-    a.onclick = async () => {
-      const ruta = await apiCall('abrir_archivo', f);
-      if (ruta){
-        document.getElementById('viewer').src = ruta;
-      }
-    };
-
-    li.appendChild(a);
-
-    const actions = document.createElement('div');
-    const del = document.createElement('button');
-    del.textContent = 'Eliminar';
-    del.onclick = async () => {
-      await apiCall('delete_file', f);
-      await loadFiles();
-      document.getElementById('viewer').src = "";
-    };
-    actions.appendChild(del);
-
-    li.appendChild(actions);
-    list.appendChild(li);
-  });
+/* Inicializar preferencias (theme + zoom) */
+async function applyPrefs(){
+  const prefs = await apiCall('get_prefs') || {theme: 'light', zoom: '1.0'};
+  const theme = prefs.theme || 'light';
+  const zoom = parseFloat(prefs.zoom || '1.0');
+  // aplicar theme
+  if (theme === 'dark'){
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeSelect').value = 'dark';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeSelect').value = 'light';
+  }
+  // aplicar zoom
+  currentZoom = isNaN(zoom) ? 1.0 : zoom;
+  applyZoom(currentZoom);
+  updateZoomLabel();
 }
 
-document.getElementById('uploadBtn').onclick = async () => {
-  await apiCall('upload_file');
+/* Aplica zoom al iframe de forma simple */
+function applyZoom(z){
+  const iframe = document.getElementById('viewer');
+  // mejorar compatibilidad con distintos webviews:
+  // intentamos usar style.zoom si disponible, sino transform
+  if ('zoom' in iframe.style){
+    iframe.style.zoom = String(z);
+  } else {
+    iframe.style.transform = `scale(${z})`;
+    iframe.style.transformOrigin = '0 0';
+  }
+}
+
+/* Actualiza etiqueta visual del zoom */
+function updateZoomLabel(){
+  const pct = Math.round(currentZoom * 100);
+  document.getElementById('zoomValue').textContent = pct + '%';
+}
+
+/* Guardar prefs en backend */
+async function savePrefs(){
+  const theme = document.getElementById('themeSelect').value || 'light';
+  const zoom = String(currentZoom);
+  await apiCall('set_prefs', theme, zoom);
+}
+
+/* Cargar lista de archivos */
+async function loadFiles(){
+  const files = await apiCall("list_files") || [];
+  const list = document.getElementById("fileList");
+  list.innerHTML = "";
+
+  files.forEach(f=>{
+    const li = document.createElement("li");
+    li.textContent = f;
+    li.onclick = async ()=>{
+      const ruta = await apiCall("abrir_archivo", f);
+      if(ruta){
+        document.getElementById("viewer").src = ruta;
+        currentShown = f;
+      }
+    };
+    list.appendChild(li);
+  });
+
+  // actualizar selector de eliminar
+  const sel = document.getElementById("deleteSelect");
+  if (sel){
+    sel.innerHTML = "";
+    files.forEach(f=>{
+      const op = document.createElement("option");
+      op.value = f;
+      op.textContent = f;
+      sel.appendChild(op);
+    });
+  }
+}
+
+/* Dropdown logic (files) */
+document.addEventListener("click", e=>{
+  const group = document.getElementById("filesGroup");
+  const dd = document.getElementById("filesDropdown");
+  if(!group.contains(e.target)){
+    dd.classList.remove("show");
+    document.getElementById("filesBtn").setAttribute("aria-expanded","false");
+    document.getElementById("deleteInline").style.display = "none";
+  }
+});
+
+document.getElementById("filesBtn").onclick = ()=>{
+  const dd = document.getElementById("filesDropdown");
+  const btn = document.getElementById("filesBtn");
+  const open = btn.getAttribute("aria-expanded") === "true";
+  dd.classList.toggle("show", !open);
+  btn.setAttribute("aria-expanded", String(!open));
+  document.getElementById("deleteInline").style.display = "none";
+};
+
+/* Files actions */
+document.getElementById("uploadBtn").onclick = async ()=>{
+  await apiCall("upload_file");
   await loadFiles();
 };
 
-document.getElementById('refreshBtn').onclick = loadFiles;
+document.getElementById("refreshBtn").onclick = loadFiles;
 
-document.getElementById('closeViewerBtn').onclick = () => {
-  document.getElementById('viewer').src = "";
+/* Delete submenu */
+document.getElementById("showDeleteBtn").onclick = async ()=>{
+  await loadFiles();
+  const div = document.getElementById("deleteInline");
+  div.style.display = (div.style.display === "block") ? "none" : "block";
 };
 
-// INICIO
-(async ()=>{
-  await loadFiles();
-})();
-</script>
-
-</body>
-</html>
+document.getElementById("deleteConfirm").onclick = async ()=>{
+  const sel = document.getElementById("delet
